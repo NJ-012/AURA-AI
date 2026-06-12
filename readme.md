@@ -2,8 +2,6 @@
 ### 🧠 Submission for Microsoft Agents League Hackathon 2026 (Reasoning Agents Track)
 
 **Developer Identification:** Niyati Joshi  
-**Project Configuration:** Version 3.5.0 (Hardened Release)  
-**Academic Reference:** Roll No: E222  
 
 ---
 
