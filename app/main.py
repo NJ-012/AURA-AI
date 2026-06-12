@@ -2,13 +2,11 @@ import os
 import time
 import uuid
 import math
-import re
 from datetime import datetime
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 from pydantic import BaseModel, Field
-from fastapi import FastAPI, HTTPException, status, Request
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 
 app = FastAPI(
     title="Aura AI - Cognitive Reasoning Engine Core",
@@ -25,8 +23,7 @@ app.add_middleware(
     expose_headers=["*"]
 )
 
-# --- 1. RESILIENT FALLBACK SCHEMAS ---
-
+# --- RESILIENT RAW INPUT SCHEMAS ---
 class ConflictRequest(BaseModel):
     user_input: str
     relationship_context: str
@@ -82,50 +79,7 @@ class GrandSubmissionResponse(BaseModel):
     suggested_drafts: List[DraftOption]
 
 
-# --- 2. 422 CRASH OVERRIDE EXCEPTION PROTECTION INTERCEPTOR ---
-
-@app.exception_handler(Exception)
-async def global_exception_interceptor(request: Request, exc: Exception):
-    """Intercepts validation drops to prevent React code white crashes under 422 mismatch loops."""
-    execution_id = f"aura-core-override-{uuid.uuid4().hex[:8].upper()}"
-    
-    # Send a beautiful structured dictionary that perfectly mocks your frontend loops
-    # safely instead of breaking your UI component loops
-    return JSONResponse(
-        status_code=200,
-        content={
-            "execution_id": execution_id,
-            "timestamp": datetime.utcnow().isoformat() + "Z",
-            "telemetry": {"total_execution_latency_ms": 351.45, "token_usage_count": 45, "microsoft_safety_score": 0.99, "active_memory_slots": 3},
-            "reasoning_trace": [
-                {"step_id": 1, "step_name": "Microsoft Safety Guardrails Framework", "latency_ms": 0.05, "status": "SUCCESS", "deductions": "System override verification completed."},
-                {"step_id": 2, "step_name": "Microsoft Work IQ Sync Engine", "latency_ms": 150.12, "status": "SUCCESS", "deductions": "Fallback connection parameters synchronized cleanly."}
-            ],
-            "emotional_assessment": {
-                "primary_emotion": "Linguistic Dynamic Sync Underway",
-                "linguistic_intensity": 0.45,
-                "detected_triggers": ["Dynamic Stream Payload Alignment Tracking"],
-                "underlying_needs": ["Linguistic Symmetry Structural Restructuring"],
-                "safety_escalation_required": False
-            },
-            "iq_grounding": {
-                "layer_assigned": "Microsoft Foundry IQ Mesh Network",
-                "context_token_id": "WRK-IQ-FALLBACK-TOKEN",
-                "framework_applied": "Gottman Core Systems Template Mesh Network",
-                "security_clearance_level": "Confidential",
-                "graph_citations": []
-            },
-            "step_by_step_strategy": ["Enforce soft structural system check ins to allow dynamic endpoint buffering loops."],
-            "suggested_drafts": [
-                {"variant": "Empathetic Track", "text": "Hey, noticed we had a brief mismatch sync lag over the network. I value our conversation setup and wanted to check in smoothly.", "tonal_weight": "High Empathy", "accessibility_rationale": "Soft fallback"},
-                {"variant": "Direct Track", "text": "Hey, let's step away from text lag loops. Let's align parameters on a quick 2 minute call.", "tonal_weight": "Actionable Clarity", "accessibility_rationale": "Direct layout mapping"}
-            ]
-        }
-    )
-
-
-# --- 3. HIGH VALUE ULTRA PERSONALIZED GENERATIVE MECHANISM ---
-
+# --- HIGH CONTEXT LOGICAL PARSER ENGINE ---
 class LinguisticReasoningEngine:
     
     @staticmethod
@@ -136,7 +90,7 @@ class LinguisticReasoningEngine:
         return -sum((count / len(text)) * math.log2(count / len(text)) for count in frequencies.values())
 
     @classmethod
-    def process_and_personalize(cls, raw_text: str, context_label: str) -> Dict[str, Any]:
+    def parse_and_build(cls, raw_text: str, context_label: str) -> Dict[str, Any]:
         overall_start = time.perf_counter()
         
         lower_text = raw_text.lower().strip()
@@ -153,34 +107,27 @@ class LinguisticReasoningEngine:
         intensity_metric = (caps_ratio * 0.55) + (min(exclamations, 6) * 0.08) + (max(4.0 - entropy, 0) * 0.06)
         final_intensity = min(round(0.20 + intensity_metric, 2), 1.0)
 
-        # 🎯 ADVANCED LINGUISTIC EXTRACTOR SWITCHES (Har situation ke liye bilkul naye custom messages)
+        # 🎯 EXPLICIT PHRASE EXTRACTORS (No more static overrides)
         issue_context = "the current gap in our communication flow"
         custom_action = "take a breather and reconnect"
         trigger_node = "Implicit Strategic Dynamic Shift"
         underlying_need = "Predictable Communication Cadence"
 
-        # Situation Branch A: Technical Jargon & Explanatory Exhaustion (GF / BF Code Assignment scenario)
+        # Check for technical jargon
         if any(w in lower_text for w in ["project", "tech", "ai", "understand", "explain", "irritate", "difficult", "coding"]):
             issue_context = "the complex technical details, coding modules, and project updates that are getting overwhelming to process"
             custom_action = "step away from the tech talk completely, drop the code blocks, and grab coffee to clear our heads"
             trigger_node = "Cognitive Explanatory Overload Friction"
             underlying_need = "Empathetic Communication Accommodation"
             
-        # Situation Branch B: Asynchronous Desertion (Text left on seen / ignored logs)
+        # Check for async messaging gap
         elif any(w in lower_text for w in ["read", "reply", "seen", "ignore", "text", "whatsapp", "calls"]):
             issue_context = "the recent communication lag and texts left on read without closure patches"
             custom_action = "bypass the long text messages entirely and jump on a quick real-time vocal bridge call"
             trigger_node = "Asynchronous Communication Desertion Tracker"
             underlying_need = "Relational Equity Reassurance"
 
-        # Situation Branch C: Scheduling and Time Conflict Core
-        elif any(w in lower_text for w in ["busy", "time", "schedule", "meet", "later"]):
-            issue_context = "our conflicting timeline grids and matching calendar availabilities"
-            custom_action = "set up a simple, stress-free 5-minute sync checkpoint layer whenever things cool down"
-            trigger_node = "Operational Timeline Misalignment"
-            underlying_need = "Structured Functional Schedule Synchronization"
-
-        # Context Token Label Router
+        # Check for relationship scopes
         relationship_scope = "our alignment matrix"
         if any(w in lower_context for w in ["friend", "bestie", "dost"]):
             relationship_scope = "our friendship"
@@ -189,20 +136,18 @@ class LinguisticReasoningEngine:
         elif any(w in lower_context for w in ["work", "lead", "club", "teams", "project"]):
             relationship_scope = "our professional workplace collaboration"
 
-        # 🔮 DEEP HYBRID SEGMENTATION SYNTHESIS (100% Unique, Person-to-Person Content Formulation)
+        # Direct string formatting injects user state natively
         emp_text = f"I've been internally reflecting on how we are currently navigating {issue_context}. Because {relationship_scope} genuinely matters to me deeply, processing this felt a bit heavy on my end. I really value our dynamic and want to ensure we're completely fine whenever your schedule allows a bit of breathing space to talk."
         dir_text = f"Hey, let's step back from analyzing {issue_context} for a moment. I value clear transparency and care too much about {relationship_scope} to let things drift into weird boundaries. Let's block out 5 minutes today to {custom_action} cleanly."
         min_text = f"Hey, thinking about {relationship_scope}. Let's find a soft slot to {custom_action} sometime later this week?"
 
         primary_emotion = "Anxious Stress Configuration" if final_intensity > 0.65 else "Low Velocity Communication Drift Layer"
-
         strategy = [
             f"Enforce an immediate cognitive pause sequence to safely de-escalate the calculated {int(final_intensity*100)}% lexical density tracking boundary.",
             f"Address the core variable ({issue_context}) directly without setting up internal defensive filters.",
-            f"Transition transmission loops to low-friction audio channels to {custom_action} without messaging overhead."
+            f"Transition transmission loops to audio channels to {custom_action} without messaging overhead."
         ]
 
-        # Metric Clock Generators
         s1_time = round(0.04 + (total_chars * 0.0001), 2)
         s2_time = round(150.21 + (final_intensity * 1.8), 2)
         s3_time = round(200.42 + (entropy * 0.11), 2)
@@ -258,34 +203,17 @@ class LinguisticReasoningEngine:
         }
 
 
-# --- 4. DATA PIPELINE ENDPOINT CONTROLLERS ---
-
+# --- RESILIENT CONTROL CONTROLLERS ---
 @app.post("/api/analyze")
-async def analyze_legacy_catchment(request: Request):
-    """Dynamic unstructured payload dictionary catcher to permanently prevent 422 router drop crashes."""
-    try:
-        raw_body = await request.json()
-        u_input = raw_body.get("user_input", raw_body.get("Describe Drift or Paste Raw Draft", ""))
-        r_context = raw_body.get("relationship_context", raw_body.get("Relationship Context", ""))
-        if not u_input or not r_context:
-            raise ValueError()
-    except Exception:
-        u_input = "I am processing communication drift parameters across my system profile."
-        r_context = "Friendship Ecosystem"
-        
-    return LinguisticReasoningEngine.process_and_personalize(u_input, r_context)
+async def analyze_fallback_endpoint(request: Request):
+    raw_body = await request.json()
+    u_input = raw_body.get("user_input", raw_body.get("Describe Drift or Paste Raw Draft", "Default context log sequence"))
+    r_context = raw_body.get("relationship_context", raw_body.get("Relationship Context", "Peer Node Matrix"))
+    return LinguisticReasoningEngine.parse_and_build(u_input, r_context)
 
 @app.post("/api/analyze-conflict")
-async def analyze_conflict_catchment(request: Request):
-    """Mirror gateway node ensuring zero-percent breakdown across modern layout triggers."""
-    try:
-        raw_body = await request.json()
-        u_input = raw_body.get("user_input", raw_body.get("Describe Drift or Paste Raw Draft", ""))
-        r_context = raw_body.get("relationship_context", raw_body.get("Relationship Context", ""))
-        if not u_input or not r_context:
-            raise ValueError()
-    except Exception:
-        u_input = "I am processing communication drift parameters across my system profile."
-        r_context = "Friendship Ecosystem"
-        
-    return LinguisticReasoningEngine.process_and_personalize(u_input, r_context)
+async def analyze_conflict_endpoint(request: Request):
+    raw_body = await request.json()
+    u_input = raw_body.get("user_input", raw_body.get("Describe Drift or Paste Raw Draft", "Default context log sequence"))
+    r_context = raw_body.get("relationship_context", raw_body.get("Relationship Context", "Peer Node Matrix"))
+    return LinguisticReasoningEngine.parse_and_build(u_input, r_context)
