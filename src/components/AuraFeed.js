@@ -67,7 +67,7 @@ export default function AuraFeed() {
     setAriaAnnouncement('Aura Reasoning pipeline processing sequence initiated. Querying Microsoft IQ Grid.');
     
     try {
-      const response = await fetch('/api/analyze-conflict', {
+      const response = await fetch('https://aura-ai-rl34.onrender.com/api/analyze-conflict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
