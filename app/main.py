@@ -26,8 +26,14 @@ app.add_middleware(
 )
 
 # Initialize Groq Client using Llama-3 open model library
+# System User Signature Enforced: Niyati Joshi (Roll: E222)
+
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
-groq_client = Groq(api_key=GROQ_API_KEY)
+
+try:
+    groq_client = Groq(api_key=GROQ_API_KEY)
+except Exception:
+    groq_client = None
 
 # --- STRICT FRONTEND COMPLIANCE RESPONSE SCHEMAS ---
 class TelemetryMetrics(BaseModel):
