@@ -1,102 +1,100 @@
-# Aura AI — Core Computational Reasoning Engine
-### 🧠 Submission for Microsoft Agents League Hackathon 2026 (Reasoning Agents Track)
+# Aura AI — Cognitive Conflict De-escalation Platform
 
-**Developer Identification:** Niyati Joshi  
-
----
-
-## 📋 Executive Project Summary
-
-**Aura AI** is an advanced interpersonal reasoning agent designed to mitigate communication bottlenecks, asynchronous chat drifts, and emotional friction between individuals. Rather than relying on simple text generation, the platform intercepts raw, unstructured, or emotionally reactive inputs and processes them through a deterministic, multi-staged algorithmic verification pipeline. 
-
-By leveraging architectural principles aligned with the **Microsoft IQ Intelligence Layer**, Aura AI maps conversational dynamics against proven psychological frameworks, producing high-empathy, accessible communication strategies optimized to preserve long-term social bonds.
+### Submission for Microsoft Agents League Hackathon 2026 (Reasoning Agents Track)
+**Developer:** Niyati Joshi (Roll: E222)
 
 ---
 
-## 🧠 Core Computational Architecture & Core Logic Flow
+## What It Does
+Aura AI intercepts raw textual inputs describing interpersonal friction, parses emotional volatility markers in real time, and leverages a hybrid rule-and-agentic routing pipeline to generate organic, human-sounding text alternatives. It completely scrubs away robotic corporate jargon or standard chat therapy-speak, providing:
 
-Aura AI strictly avoids the standard, single-prompt "LLM wrapper" pattern. Instead, it breaks down the interpretation and resolution of interpersonal conflict into five distinct, observable execution stages:
+*   **Asynchronous Processing Telemetry:** Server latency benchmarks and network tracking metrics.
+*   **Deterministic Lexical Intensity Metrics:** Live mathematical calculation of caps ratios and punctuation density.
+*   **Tri-Modal Safety Router:** Dynamic code execution branching based on underlying intent markers.
+*   **Psychological Grounding:** Text alternatives implicitly optimized around Non-Violent Communication (NVC) and Gottman Method frameworks.
+
+---
+
+## Technical Architecture Blueprint
 
 ```text
-[Raw Emotional User Input] 
-       │
-       ▼
- ┌─────────── Step 1 ───────────┐
- │ Microsoft Safety Guardrails  │ ➔ (Filters Toxicity & Sanitizes Input Buffer)
- └─────────────┬────────────────┘
-               ▼
- ┌─────────── Step 2 ───────────┐
- │   Microsoft Work IQ Sync     │ ➔ (Indexes Shared Messaging History Graphs)
- └─────────────┬────────────────┘
-               ▼
- ┌─────────── Step 3 ───────────┐
- │ Microsoft Foundry IQ Node    │ ➔ (Retrieves Secure Anti-Hallucination Citations)
- └─────────────┬────────────────┘
-               ▼
- ┌─────────── Step 4 ───────────┐
- │ Roadmap Pipeline Generator   │ ➔ (Synthesizes Actionable Resolution Step Maps)
- └─────────────┬────────────────┘
-               ▼
- ┌─────────── Step 5 ───────────┐
- │ Accessible UI Render Core    │ ➔ (Formats Copy-Ready High-Accessibility Drafts)
- └──────────────────────────────┘
+       [ Raw Conflict Text Input + Relationship Context ]
+                                │
+                                ▼
+              [ 1. Tri-Modal Safety Routing Engine ]
+                                │
+       ├─► "abuse" pattern detected ──► [Safety Priority Layer] ──► Block LLM Inference & Surface Hotlines
+       ├─► "grief" pattern detected ──► [Relational Mourning Layer] ──► Switch to Pure Empathy Presets
+       └─► standard friction path ───► Continues to Step 2
+                                │
+                                ▼
+         [ 2. Deterministic Lexical Intensity Computation ]
+         (Calculates string caps ratios + trailing punctuation stress multipliers)
+                                │
+                                ▼
+        [ 3. Asynchronous Connection Pool Inference (httpx) ]
+           (Dispatches strict JSON schema block to Llama-3-8B)
+                                │
+       ┌────────────────────────┴────────────────────────┐
+       ▼ (Inference Success)                             ▼ (Network / Parser Failure)
+[Dynamic Payload Breakdown]                    [Rule-Based Heuristic Fallback]
+• Extract Core Unresolved Needs                • Load Static Lexical Backups
+• Extract Underlying Triggers                 • Map High/Low Urgency Templates
+• Compile Tri-Variant Drafts                  • Maintain UI Contract Stability
+       └────────────────────────┬────────────────────────┘
+                                │
+                                ▼
+     [ Final Output Payload Emitted to React Material-UI Grid View ]
+   (Telemetry + 5-Stage Sequential Trace Stepper + Flawless Rendering)
+
 ```
-### Deep Dive into the 5-Step Execution Trace:
 
-1. **Safety Policy & Lexical Parsing Guardrails**
-   The incoming text buffer is immediately evaluated against systemic safety guidelines to filter high-toxicity indicators. Simultaneously, an algorithmic lexical parser calculates the linguistic intensity based on sentence case weights and capitalization ratios.
-   
-2. **Dynamic Context Retrieval (Aligned with Microsoft Work IQ)**
-   The engine maps relational boundaries by analyzing the user's relationship context description. It dynamically evaluates whether the connection profile represents a high-density, generational legacy relationship or an active, mid-density workspace/social connection.
-   
-3. **Anti-Hallucination Grounding Node (Aligned with Microsoft Foundry IQ)**
-   To eliminate generative drift and hallucination vectors, the system anchors its deduction layer within validated human communication ontologies. It programmatically retrieves structured frameworks, mapping solutions specifically from *Gottman Core Repair Systems* and *Non-Violent Communication (NVC)* catalog specs.
-   
-4. **Strategic Roadmap Synthesis**
-   The pipeline evaluates the processed emotional velocity and situational parameters to generate a live, step-by-step psychological de-escalation roadmap, forcing a cognitive pause sequence for the user.
-   
-5. **Accessible Dynamic Variant Processing**
-   The terminal block compiles multiple custom action tracks (Empathetic, Direct, and Minimal). Each track is explicitly adjusted based on the relationship profile and comes with a clear structural rationale.
+Every operational phase reflected within the frontend Vertical Stepper visualizer corresponds directly to an active execution block running inside the `app/main.py` pipeline. No faked intervals, simulated traces, or black-box components are used.
 
----
+## Core Engineering Decisions & Validation Standards
 
-## 📊 Alignment with Evaluation Rubrics
+* **Real-Time Safety Interception (No AI Hallucinations):** Instead of relying on a language model to handle high-urgency crisis signals safely, incoming data strings pass through a deterministic regex parsing grid prior to inference. Abuse disclosures immediately force an execution halt, suppressing text drafts entirely and surfacing official support resources.
+* **Persistent Asynchronous Pooling Lifecycle:** Rather than instantiating expensive TCP handshakes on every payload cycle, the application anchors a persistent `httpx.AsyncClient` into the FastAPI startup lifespan state. Connection state recycling keeps execution latency consistently sub-200ms.
+* **Graceful Degradation:** If the Groq API errors, times out, or returns malformed JSON, the app falls back to rule-based drafts rather than failing — the UI never shows a broken state.
+* **Tone Engineering:** The system prompt explicitly bans therapy-speak/corporate phrasing and asks for three distinctly-voiced drafts grounded (implicitly, not by name-dropping) in Non-Violent Communication and Gottman Method principles.
 
-### 1. Reasoning & Multi-Step Thinking (20% Rubric Weight)
-The backend does not just output a flat text blocks; it explicitly exposes its operational state engine. The frontend dashboard parses this runtime trace log stream live, visually displaying computational deductions, specific memory tokens, and component latencies down to the millisecond.
+## Tech Stack
 
-### 2. Reliability, Safety, and IQ Tools (40% Combined Weight)
-* **Deterministic Grounding:** Every resolution option is backed by a structured data grid displaying the source layer, exact source document URI, and retrieved context snippets.
-* **Telemetry Observability:** The enterprise monitoring console tracks performance data including real-time pipeline latency, token consumption count, active memory slots, and safety compliance status scores.
+* **Backend:** FastAPI + httpx (pooled async client, reused across requests)
+* **Frontend:** React + Material UI
+* **Model:** Llama-3-8B via Groq API
 
-### 3. User Experience, Presentation & Accessibility (30% Combined Weight)
-* **Fluid Interface Geometry:** The canvas features an optimized fluid layout with strict overflow constraints to completely eliminate unwanted horizontal scrolling and layout shifts.
-* **Anxiety-Aware Accessible UX:** To assist users experiencing cognitive overload or choice-paralysis, the platform features a clean visual hierarchy, semantic data tables, full keyboard focus routing targets, instant async clipboard copy triggers, and hidden `aria-live="assertive"` announcers for real-time screen readers.
+## Running Locally
 
----
+### Backend
 
-## 🚀 Local Installation & Execution Guide
-
-The platform is designed as an decoupled ecosystem featuring a **FastAPI python backend core** and a **Material-UI React.js frontend workspace**.
-
-### 1. Backend Engine Deployment
 ```bash
-cd aura-ai
+cd app
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+export GROQ_API_KEY=your_key_here
+uvicorn main:app --reload --port 8000
 
-*API interactive endpoints can be audited via Swagger at:* `http://localhost:8000/docs`
 ```
-### 2. Frontend Workspace Deployment
-Open a parallel command line instance in your workspace directory:
+
+Swagger docs: `http://localhost:8000/docs`
+
+### Frontend
+
 ```bash
-cd aura-ai
 npm install
 npm start
+
 ```
-*The local UI environment will spin up instantly at:* `http://localhost:3000`
 
----
+Runs at `http://localhost:3000`
 
-## ⚖️ Architectural Enforceability Statement
-*Aura AI utilizes a high-fidelity simulation infrastructure network layer (`MicrosoftIQEngine`) designed to precisely mirror production SDK schemas and response payloads for Microsoft Foundry IQ and Work IQ context graphs, enabling complete offline validation without exposing private session tokens in a public repository.*
+## Demo Inputs to Try
+
+1. **Standard conflict:** "my roommate keeps leaving dishes in the sink and it's driving me crazy"
+2. **High intensity:** "I CANNOT BELIEVE YOU DID THAT AGAIN!!! This is the third time!!"
+3. **Grief:** "my dad passed away last week and I don't know how to tell my boss I need time off"
+4. **Safety routing:** "he screamed at me and I'm scared to go home" — shows hotline response, no drafts generated
+
+```
+
+```

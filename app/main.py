@@ -1,12 +1,12 @@
-# System User Signature Enforced: Niyati Joshi (Roll: E222)
 import os
 import time
 import uuid
 import json
 import re
+import math
 from datetime import datetime
 from contextlib import asynccontextmanager
-from typing import List, Dict, Any, Optional
+from typing import List, Optional
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,7 +14,6 @@ import httpx
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Pure Render environment injector to bypass GitHub secret scan limits
     api_key = os.environ.get("GROQ_API_KEY", "").strip()
     app.state.http_client = httpx.AsyncClient(
         base_url="https://api.groq.com/openai/v1",
@@ -27,14 +26,13 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Aura AI - Cognitive Conflict De-escalation Core",
-    version="11.0.0",
+    version="11.1.0",
     lifespan=lifespan
 )
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
 )
@@ -82,21 +80,37 @@ def classify_intent(text: str) -> str:
             return mode
     return "standard"
 
+def shannon_entropy(text: str) -> float:
+    if not text:
+        return 0.0
+    freqs = {}
+    for ch in text:
+        freqs[ch] = freqs.get(ch, 0) + 1
+    total = len(text)
+    return -sum((c / total) * math.log2(c / total) for c in freqs.values())
+
 def compute_lexical_intensity(text: str) -> float:
+    """Combines caps ratio, punctuation density, and character entropy.
+    Lower entropy (more repetitive phrasing, e.g. 'NO NO NO') nudges intensity up."""
     if not text.strip():
         return 0.0
-    caps_ratio = sum(1 for c in text if c.isupper()) / max(len(text), 1)
+    total = len(text)
+    caps_ratio = sum(1 for c in text if c.isupper()) / total
     exclam_ratio = text.count("!") / max(len(text.split()), 1)
-    return min(1.0, round(caps_ratio * 2 + exclam_ratio * 3, 2))
+    entropy = shannon_entropy(text)
+    entropy_penalty = max(0.0, (4.2 - entropy)) * 0.05
+    score = caps_ratio * 1.5 + exclam_ratio * 2.5 + entropy_penalty
+    return min(1.0, round(score, 2))
 
 
 @app.post("/api/analyze-conflict", response_model=UnifiedAuraResponse)
 async def analyze_conflict(payload: ConflictInput, request: Request):
     start_timer = time.perf_counter()
     execution_id = f"aura-real-{uuid.uuid4().hex[:8].upper()}"
-    
+
     intent = classify_intent(payload.user_input)
     intensity = compute_lexical_intensity(payload.user_input)
+    entropy_val = round(shannon_entropy(payload.user_input), 2)
 
     primary_emotion = "Friction Dynamic"
     underlying_needs = ["Mutual Respect", "Clear Communication Space"]
@@ -129,7 +143,7 @@ async def analyze_conflict(payload: ConflictInput, request: Request):
     else:
         client: httpx.AsyncClient = request.app.state.http_client
         api_key_check = os.environ.get("GROQ_API_KEY", "").strip()
-        
+
         if api_key_check:
             try:
                 system_instruction = (
@@ -149,7 +163,7 @@ async def analyze_conflict(payload: ConflictInput, request: Request):
                     "  \"minimal_draft\": \"Casual low pressure ping\"\n"
                     "}"
                 )
-                
+
                 response = await client.post(
                     "/chat/completions",
                     json={
@@ -165,12 +179,12 @@ async def analyze_conflict(payload: ConflictInput, request: Request):
                 )
                 response.raise_for_status()
                 obj = json.loads(response.json()["choices"][0]["message"]["content"])
-                
+
                 primary_emotion = obj.get("primary_emotion", primary_emotion)
                 underlying_needs = obj.get("underlying_needs", underlying_needs)
                 detected_triggers = obj.get("detected_triggers", detected_triggers)
                 strategy_steps = obj.get("strategy_steps", strategy_steps)
-                
+
                 drafts = [
                     DraftOption(variant="Empathetic Track", text=obj.get("empathetic_draft", ""), tonal_weight="Deep Validation Format"),
                     DraftOption(variant="Direct Track", text=obj.get("direct_draft", ""), tonal_weight="Honest Action Frame"),
@@ -196,11 +210,11 @@ async def analyze_conflict(payload: ConflictInput, request: Request):
         timestamp=datetime.utcnow().isoformat() + "Z",
         telemetry=TelemetryMetrics(execution_latency_ms=elapsed_ms, intent_classification=intent, linguistic_intensity=intensity),
         reasoning_trace=[
-            "Safety scanner executed: checking for active crisis signatures.",
-            f"Computed real-time lexical intensity multiplier: {intensity}",
-            f"Routing engine decision path: determined '{intent}' network profile.",
-            "Live Llama3 infrastructure call completed successfully." if intent == "standard" and safety_mode != "fallback" else f"Specialized routing activated: {safety_mode}.",
-            "State array compiled. Emitting dynamic response payload onto MUI framework."
+            "Safety scanner executed: checking for crisis-pattern matches.",
+            f"Computed lexical intensity: {intensity} (entropy: {entropy_val} bits/char)",
+            f"Routing decision: '{intent}' pathway selected.",
+            "Live Llama-3 inference completed." if intent == "standard" and safety_mode != "fallback" else f"Specialized routing activated: {safety_mode}.",
+            "Response payload assembled for UI render."
         ],
         safety_routing=SafetyCrisisNode(mode=safety_mode, message=safety_message, resources_shown=resources_shown),
         primary_emotion=primary_emotion,
