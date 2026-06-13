@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Aura AI - Cognitive Conflict De-escalation Core",
-    version="11.1.0",
+    version="11.2.0",
     lifespan=lifespan
 )
 
@@ -90,8 +90,6 @@ def shannon_entropy(text: str) -> float:
     return -sum((c / total) * math.log2(c / total) for c in freqs.values())
 
 def compute_lexical_intensity(text: str) -> float:
-    """Combines caps ratio, punctuation density, and character entropy.
-    Lower entropy (more repetitive phrasing, e.g. 'NO NO NO') nudges intensity up."""
     if not text.strip():
         return 0.0
     total = len(text)
@@ -152,7 +150,7 @@ async def analyze_conflict(payload: ConflictInput, request: Request):
                     "- Strictly NO corporate speak or therapy jargon like 'I hear you', 'navigate parameters', or 'processing framework'.\n"
                     "- Write like a real text back to someone: use natural contractions and normal conversational layout.\n"
                     "- Ground response styles implicitly in concepts from Non-Violent Communication and the Gottman Method.\n\n"
-                    "Return a raw valid JSON object matching this schema blueprint precisely without markdown formatting or code block wraps:\n"
+                    "Return ONLY a raw valid JSON object matching this schema blueprint precisely. Do not enclose it in markdown block tags:\n"
                     "{\n"
                     "  \"primary_emotion\": \"Short natural description\",\n"
                     "  \"underlying_needs\": [\"Need 1\", \"Need 2\"],\n"
@@ -178,7 +176,14 @@ async def analyze_conflict(payload: ConflictInput, request: Request):
                     }
                 )
                 response.raise_for_status()
-                obj = json.loads(response.json()["choices"][0]["message"]["content"])
+                
+                # Defensive JSON Extraction (Strips accidental markdown code blocks)
+                raw_content = response.json()["choices"][0]["message"]["content"].strip()
+                if raw_content.startswith("```"):
+                    raw_content = re.sub(r"^```(?:json)?\s*|\s*
+```$", "", raw_content, flags=re.MULTILINE).strip()
+                
+                obj = json.loads(raw_content)
 
                 primary_emotion = obj.get("primary_emotion", primary_emotion)
                 underlying_needs = obj.get("underlying_needs", underlying_needs)
